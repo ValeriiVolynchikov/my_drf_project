@@ -9,6 +9,8 @@ class PaymentSerializers(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializers(many=True, read_only=True)  # Добавляем историю платежей
+
     class Meta:
         model = User
-        fields = '__all__'
+        fields = '__all__'  # Включаем поле payments
