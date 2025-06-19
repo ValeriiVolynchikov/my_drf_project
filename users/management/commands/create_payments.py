@@ -1,34 +1,35 @@
-from django.core.management.base import BaseCommand
-from users.models import Payment, User
-from lms.models import Course, Lesson
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
+
+from django.core.management.base import BaseCommand
+
+from lms.models import Course, Lesson
+from users.models import Payment, User
+
 
 class Command(BaseCommand):
-    help = 'Creates test payment data'
+    help = "Creates test payment data"
 
     def handle(self, *args, **options):
         # Получаем или создаем тестовые данные, если их нет
         user = User.objects.first()
         if not user:
             user = User.objects.create_user(
-                email='test@example.com',
-                password='testpass123'
+                email="test@example.com", password="testpass123"
             )
 
         course = Course.objects.first()
         if not course:
             course = Course.objects.create(
-                name='Тестовый курс',
-                description='Описание тестового курса'
+                name="Тестовый курс", description="Описание тестового курса"
             )
 
         lesson = Lesson.objects.first()
         if not lesson:
             lesson = Lesson.objects.create(
-                name='Тестовый урок',
-                description='Описание тестового урока',
-                course=course
+                name="Тестовый урок",
+                description="Описание тестового урока",
+                course=course,
             )
 
         # Создаем платежи
@@ -38,7 +39,7 @@ class Command(BaseCommand):
             paid_course=course,
             paid_lesson=None,
             amount=10000,
-            payment_method='transfer'
+            payment_method="transfer",
         )
 
         Payment.objects.create(
@@ -47,7 +48,7 @@ class Command(BaseCommand):
             paid_course=None,
             paid_lesson=lesson,
             amount=2000,
-            payment_method='cash'
+            payment_method="cash",
         )
 
-        self.stdout.write(self.style.SUCCESS('Successfully created 2 payments'))
+        self.stdout.write(self.style.SUCCESS("Successfully created 2 payments"))
