@@ -1,10 +1,11 @@
-from rest_framework.serializers import ValidationError
 import re
+
+from rest_framework.serializers import ValidationError
 
 
 class YouTubeUrlValidator:
     # Выносим компиляцию regex в константу класса
-    YOUTUBE_REGEX = re.compile(r'^(https?://)?(www\.)?(youtube\.com|youtu\.be)/')
+    YOUTUBE_REGEX = re.compile(r"^(https?://)?(www\.)?(youtube\.com|youtu\.be)/")
 
     def __init__(self, field):
         self.field = field

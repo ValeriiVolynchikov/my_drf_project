@@ -1,8 +1,9 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from users.models import User
+
 from lms.models import Course, Lesson, Subscription
+from users.models import User
 
 
 class CourseTestCase(APITestCase):
@@ -14,7 +15,9 @@ class CourseTestCase(APITestCase):
         self.lesson = Lesson.objects.create(
             name="test_lesson", course=self.course, owner=self.user
         )
-        self.subscription = Subscription.objects.create(course=self.course, user=self.user)
+        self.subscription = Subscription.objects.create(
+            course=self.course, user=self.user
+        )
         self.client.force_authenticate(user=self.user)
 
     def test_course_retrieve(self):
@@ -54,6 +57,7 @@ class CourseTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(res, 6)
 
+
 class LessonsTestCase(APITestCase):
 
     def setUp(self):
@@ -75,7 +79,11 @@ class LessonsTestCase(APITestCase):
 
     def test_lesson_create(self):
         url = reverse("lms:lessons_create")
-        data = {"name": "Урок", "video_url": "https://www.youtube.com/", "course": self.course.id}
+        data = {
+            "name": "Урок",
+            "video_url": "https://www.youtube.com/",
+            "course": self.course.id,
+        }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Lesson.objects.all().count(), 2)
@@ -104,29 +112,28 @@ class LessonsTestCase(APITestCase):
 
         self.assertEqual(res, 7)
 
+
 class SubscriptionTestCase(APITestCase):
 
     def setUp(self):
-        self.user = User.objects.create(email='admin@example.com')
-        self.course = Course.objects.create(name='Python/git', description='Введение в git.hub', owner=self.user)
+        self.user = User.objects.create(email="admin@example.com")
+        self.course = Course.objects.create(
+            name="Python/git", description="Введение в git.hub", owner=self.user
+        )
         self.client.force_authenticate(user=self.user)
 
     def test_subscribe_to_course(self):
-        url = reverse('lms:subscriptions')
-        data = {'course_id': self.course.id}
+        url = reverse("lms:subscriptions")
+        data = {"course_id": self.course.id}
         response = self.client.post(url, data, format="json")
-        self.assertEqual(
-            response.status_code, status.HTTP_201_CREATED
-        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Subscription.objects.count(), 1)
         subscription = Subscription.objects.first()
 
-        self.assertEqual(
-            subscription.course, self.course
-        )
+        self.assertEqual(subscription.course, self.course)
 
     def test_unsubscribe_from_course(self):
-        url = reverse('lms:subscriptions')
+        url = reverse("lms:subscriptions")
         Subscription.objects.create(user=self.user, course=self.course)
         data = {"course_id": self.course.id}
         response = self.client.post(url, data, format="json")

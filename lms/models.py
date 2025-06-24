@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Course(models.Model):
     """
     Хранит информацию о курсе.
@@ -26,7 +25,7 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Создатель курса",
         null=True,
-        blank=True
+        blank=True,
     )
 
     class Meta:
@@ -71,7 +70,7 @@ class Lesson(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Создатель урока",
         null=True,
-        blank=True
+        blank=True,
     )
 
     class Meta:
@@ -82,26 +81,18 @@ class Lesson(models.Model):
     def __str__(self):
         return f"{self.name} (курс: {self.course.name})"
 
+
 class Subscription(models.Model):
     user = models.ForeignKey(
-        "users.User",
-        on_delete=models.CASCADE,
-        verbose_name="Пользователь"
+        "users.User", on_delete=models.CASCADE, verbose_name="Пользователь"
     )
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.CASCADE,
-        verbose_name="Курс"
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Дата подписки"
-    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="Курс")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата подписки")
 
     class Meta:
         verbose_name = "Подписка"
         verbose_name_plural = "Подписки"
-        unique_together = ('user', 'course')  # Запрет дублирования подписок
+        unique_together = ("user", "course")  # Запрет дублирования подписок
 
     def __str__(self):
         return f"{self.user} -> {self.course}"
