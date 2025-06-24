@@ -1,19 +1,27 @@
-from rest_framework import status
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView, get_object_or_404)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+    get_object_or_404,
+)
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-
-from lms.models import Course, Lesson, Subscription
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
+from lms.models import Course, Lesson
 from lms.paginators import CustomPagination
-from lms.serializer import (CourseDetailSerializer, CourseSerializer,
-                            LessonSerializer)
+from lms.serializer import CourseDetailSerializer, CourseSerializer, LessonSerializer
+from lms.models import Subscription
 from users.permissions import IsModer, IsOwner
+from django.utils.decorators import method_decorator
+from drf_yasg.utils import swagger_auto_schema
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+    operation_description="description from swagger_auto_schema via method_decorator"))
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
