@@ -28,11 +28,9 @@ class Course(models.Model):
         blank=True,
     )
     price = models.PositiveIntegerField(
-        default=0,
-        blank=True,
-        null=True,
-        verbose_name='Цена курса'
+        default=0, blank=True, null=True, verbose_name="Цена курса"
     )
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Курс"
