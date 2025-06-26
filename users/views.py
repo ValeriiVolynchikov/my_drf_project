@@ -5,8 +5,11 @@ from rest_framework.permissions import AllowAny
 from lms.models import Course
 from users.models import Payment, User
 from users.serializer import PaymentSerializers, UserSerializer
-from users.services import (create_stripe_price, create_stripe_product,
-                            create_stripe_session)
+from users.services import (
+    create_stripe_price,
+    create_stripe_product,
+    create_stripe_session,
+)
 
 
 class UserCreateAPIView(CreateAPIView):
